@@ -5,6 +5,8 @@ import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
 import { SITE_TITLE } from '../consts';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 interface Props {
 	title: string;
 	description: string;
@@ -19,7 +21,7 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="stylesheet" href="/src/styles/global.css" />
+<link rel="stylesheet" href="../../src/styles/global.css" />
 <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.svg`} />
 <link rel="sitemap" href={`${import.meta.env.BASE_URL}/sitemap-index.xml`} />
 <link
