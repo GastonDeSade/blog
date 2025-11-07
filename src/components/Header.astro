@@ -1,15 +1,17 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+
+const isProd = process.env.NODE_ENV === 'production';
 ---
 
 <header>
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/blog">Home</HeaderLink>
-			<HeaderLink href="/blog/blog">Blog</HeaderLink>
-			<HeaderLink href="/blog/about">About</HeaderLink>
+			<HeaderLink href={isProd ? '/blog' : '/'}>Home</HeaderLink>
+			<HeaderLink href={isProd ? '/blog/blog' : '/blog'}>Blog</HeaderLink>
+			<HeaderLink href={isProd ? '/blog/about' : '/about'}>About</HeaderLink>
 		</div>
 		<div class="social-links">
 			<a href="https://m.webtoo.ls/@astro" target="_blank">
