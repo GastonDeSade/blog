@@ -6,12 +6,24 @@ import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import type { CollectionEntry } from 'astro:content';
 
-const posts = (await getCollection('blog'))
-	.filter(post => post.data.IsPublished)
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-	
 const isProd = process.env.NODE_ENV === 'production';
+
+let posts;
+if(isProd) {
+    posts = (await getCollection('blog'))
+        .filter(post => post.data.isPublished && post.data.pubDate <= new Date())
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+} else {
+    posts = (await getCollection('blog'))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+}
+
+const isPostValid = (post: CollectionEntry<'blog'>) => {
+	return post.data.isPublished && post.data.pubDate <= new Date();
+};
+
 ---
 
 <!doctype html>
@@ -86,6 +98,17 @@ const isProd = process.env.NODE_ENV === 'production';
 					font-size: 1.563em;
 				}
 			}
+			/* Ajoutez ces styles */
+			.post-valid {
+				border: 2px solid green;
+				border-radius: 12px;
+				padding: 10px;
+			}
+			.post-invalid {
+				border: 2px solid red;
+				border-radius: 12px;
+				padding: 10px;
+			}
 		</style>
 	</head>
 	<body>
@@ -96,7 +119,8 @@ const isProd = process.env.NODE_ENV === 'production';
 					{
 						posts.map((post) => (
 							<li>
-								<a href={isProd ? `/blog/blog/${post.id}/` : `/blog/${post.id}/`}>
+								<a href={isProd ? `/blog/blog/${post.id}/` : `/blog/${post.id}/`}
+								   class={!isProd ? (isPostValid(post) ? 'post-valid' : 'post-invalid') : ''}>
 									{post.data.heroImage && (
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}
