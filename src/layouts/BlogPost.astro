@@ -35,6 +35,30 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				margin: auto;
 				padding: 1em;
 				color: rgb(var(--gray-dark));
+			}			
+			.prose pre {
+				background: #1e1e1e;
+				border-radius: 8px;
+				padding: 1rem;
+				margin: 1.5rem 0;
+				overflow-x: auto;
+				border: 1px solid #333;
+			}
+			
+			.prose code {
+				background: #f1f1f1;
+				padding: 0.2rem 0.4rem;
+				border-radius: 4px;
+				font-size: 0.9em;
+				color: #d63384;
+			}
+			
+			.prose pre code {
+				background: transparent;
+				padding: 0;
+				color: inherit;
+				font-size: 0.9rem;
+				line-height: 1.5;
 			}
 			.title {
 				margin-bottom: 1em;
@@ -49,9 +73,57 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				margin-bottom: 0.5em;
 				color: rgb(var(--gray));
 			}
+			.date-card {
+				background: white;
+				border-radius: 12px;
+				padding: 1.5rem;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+				border: 1px solid rgba(var(--gray-light), 0.2);
+				transition: all 0.3s ease;
+				text-align: center;
+			}
+
+			.date-card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05);
+			}
+			
+			.date-card.update {
+				border-top: 4px solid #10b981;
+			}
+			
+			.date-card:not(.update) {
+				border-top: 4px solid var(--accent);
+			}
+			
+			.date-card-icon {
+				font-size: 2rem;
+				margin-bottom: 0.5rem;
+				display: block;
+			}
+			
+			.date-card-title {
+				font-weight: 600;
+				color: black;
+				margin-bottom: 0.5rem;
+				font-size: 0.9rem;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+			
+			.date-card-value {
+				font-size: 1.1rem;
+				font-weight: 500;
+				color: var(--accent);
+			}
+			
+			.date-card.update .date-card-value {
+				color: #10b981;
+			}
 			.last-updated-on {
 				font-style: italic;
 			}
+
 		</style>
 	</head>
 
@@ -65,14 +137,22 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="prose">
 					<div class="title">
 						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Dernière mise à jour le <FormattedDate date={updatedDate} />
+							<div class="date-card">
+								<span class="date-card-icon">📅</span>
+								<div class="date-card-title">Publié le</div>
+								<div class="date-card-value">
+									<FormattedDate date={pubDate} />
+								</div>
+							</div>
+							{updatedDate && (
+								<div class="date-card update">
+									<span class="date-card-icon">🔄</span>
+									<div class="date-card-title">Mis à jour le</div>
+									<div class="date-card-value">
+										<FormattedDate date={updatedDate} />
 									</div>
-								)
-							}
+								</div>
+							)}
 						</div>
 						<h1>{title}</h1>
 						<hr />
