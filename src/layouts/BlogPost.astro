@@ -8,7 +8,17 @@ import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate: rawUpdatedDate, heroImage } = Astro.props;
+
+// Scope `updatedDate` to the whole page (frontmatter) so it can be used in the template
+// Make sure we compare date values, not object identity
+const datesEqual =
+	rawUpdatedDate &&
+	pubDate &&
+	new Date(pubDate).getTime() === new Date(rawUpdatedDate).getTime();
+
+const updatedDate = datesEqual ? null : rawUpdatedDate;
+
 ---
 
 <html lang="en">
@@ -72,6 +82,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.date {
 				margin-bottom: 0.5em;
 				color: rgb(var(--gray));
+				display: grid;
+			}
+			.date-2cards{
+				grid-template-columns: 1fr 1fr;
+			}
+			.date-3cards{
+				grid-template-columns: 1fr 1fr 1fr;
 			}
 			.date-card {
 				background: white;
@@ -87,12 +104,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				transform: translateY(-4px);
 				box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05);
 			}
-			
+
+			.date-card.startwrite {
+				border-top: 4px solid #FECA3D;
+			}
+
 			.date-card.update {
 				border-top: 4px solid #10b981;
 			}
-			
-			.date-card:not(.update) {
+
+			.date-card:not(.update):not(.startwrite) {
 				border-top: 4px solid var(--accent);
 			}
 			
@@ -117,6 +138,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				color: var(--accent);
 			}
 			
+			.date-card.startwrite .date-card-value {
+				color: #FECA3D;
+			}
+
 			.date-card.update .date-card-value {
 				color: #10b981;
 			}
@@ -136,7 +161,14 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				</div>
 				<div class="prose">
 					<div class="title">
-						<div class="date">
+						<div class={`date ${updatedDate ? 'date-3cards' : 'date-2cards'}`}>
+							<div class="date-card startwrite">
+								<span class="date-card-icon">✍️</span>
+								<div class="date-card-title">Ecrit le</div>
+								<div class="date-card-value">
+									<FormattedDate date={pubDate} />
+								</div>
+							</div>
 							<div class="date-card">
 								<span class="date-card-icon">📅</span>
 								<div class="date-card-title">Publié le</div>
