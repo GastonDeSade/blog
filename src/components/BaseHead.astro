@@ -17,6 +17,27 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { title, description, image = FallbackImage } = Astro.props;
 ---
 
+<!-- Script pour éviter le flash de contenu non stylisé (FOUC) et respecter la préférence -->
+<script is:inline>
+	(function () {
+		try {
+			const storageKey = 'theme';
+			const getPreferredTheme = () => {
+				const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(storageKey) : null;
+				if (stored === 'light' || stored === 'dark') return stored;
+				if (typeof window !== 'undefined' && window.matchMedia) {
+					return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				}
+				return 'dark';
+			};
+			const theme = getPreferredTheme();
+			document.documentElement.setAttribute('data-theme', theme);
+		} catch (_) {
+			document.documentElement.setAttribute('data-theme', 'dark');
+		}
+	})();
+</script>
+
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />

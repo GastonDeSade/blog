@@ -35,16 +35,82 @@ const isProd = process.env.NODE_ENV === 'production';
 				>
 			</a>
 			-->
+			<button id="theme-toggle" aria-label="Toggle dark mode">
+				<svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<circle cx="12" cy="12" r="5"></circle>
+					<line x1="12" y1="1" x2="12" y2="3"></line>
+					<line x1="12" y1="21" x2="12" y2="23"></line>
+					<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+					<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+					<line x1="1" y1="12" x2="3" y2="12"></line>
+					<line x1="21" y1="12" x2="23" y2="12"></line>
+					<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+					<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+				</svg>
+				<svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+				</svg>
+			</button>
 			<GithubLink />
 		</div>
 	</nav>
 </header>
+
+<script>
+(function () {
+	const storageKey = 'theme';
+
+	function getTheme() {
+		try {
+			const stored = localStorage.getItem(storageKey);
+			if (stored === 'light' || stored === 'dark') return stored;
+		} catch (_) {}
+		return document.documentElement.getAttribute('data-theme') || 'dark';
+	}
+
+	function applyDark() {
+		document.documentElement.setAttribute('data-theme', 'dark');
+		try { localStorage.setItem(storageKey, 'dark'); } catch (_) {}
+	}
+
+	function applyLight() {
+		document.documentElement.setAttribute('data-theme', 'light');
+		try { localStorage.setItem(storageKey, 'light'); } catch (_) {}
+	}
+
+	function toggleTheme() {
+		const current = getTheme();
+		if (current === 'dark') {
+			applyLight();
+		} else {
+			applyDark();
+		}
+	}
+
+	// Ensure attribute is set to sync icons and styles
+	if (getTheme() === 'dark') {
+		applyDark();
+	} else {
+		applyLight();
+	}
+
+	/** @type {HTMLElement|null} */
+	const themeToggle = document.getElementById('theme-toggle');
+	if (themeToggle) {
+		themeToggle.addEventListener('click', toggleTheme);
+	}
+})();
+</script>
 <style>
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		/* Match footer background */
+		background: linear-gradient(var(--gray-gradient)) no-repeat;
+		background-size: 100% 100%;
+		box-shadow: none;
+		border-bottom: none;
+		color: rgb(var(--gray));
 	}
 	.social-links{
 		flex-grow: 1;
@@ -68,14 +134,19 @@ const isProd = process.env.NODE_ENV === 'production';
 		gap: 1em;
 	}
 	:global(nav a) {
-		padding: 1em 0.5em;
-		color: var(--black);
+		padding: 1em 0.75em;
+		color: rgb(var(--gray));
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
+		transition: color .2s ease, border-color .2s ease;
+	}
+	:global(nav a:hover) {
+		color: rgb(var(--gray-dark));
 	}
 	:global(nav a.active) {
 		text-decoration: none;
 		border-bottom-color: var(--accent);
+		color: rgb(var(--gray-dark));
 	}
 	.social-links {
 		display: flex;
@@ -88,4 +159,28 @@ const isProd = process.env.NODE_ENV === 'production';
 			display: none;
 		}
 	}
+	#theme-toggle {
+		background: none;
+		border: none;
+		padding: 0.5em;
+		cursor: pointer;
+		color: var(--text-color);
+		transition: color 0.3s ease;
+	}
+	#theme-toggle:hover {
+		color: var(--accent);
+	}
+	.sun-icon {
+		display: none;
+	}
+	.moon-icon {
+		display: block;
+	}
+	[data-theme="dark"] .sun-icon {
+		display: block;
+	}
+	[data-theme="dark"] .moon-icon {
+		display: none;
+	}
+
 </style>
