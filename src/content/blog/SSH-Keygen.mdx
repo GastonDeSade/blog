@@ -1,9 +1,224 @@
 ---
-title: 'SSH Keygen'
-description: "Générer une clé SSH pour l'authentification sécurisée"
+title: "Configurer une clé SSH pour Git et GitHub"
+description: "Apprends à générer, ajouter et utiliser une clé SSH avec GitHub pour des connexions sécurisées et sans mot de passe."
 startDate: '2025-11-07'
-pubDate: '2025-11-08'
-updatedDate: '2025-11-08'
-heroImage: '../../assets/articles/astro-cicd-github/hero.webp'
-isPublished: false
+pubDate: '2025-11-16'
+updatedDate: '2025-11-16'
+heroImage: '../../assets/articles/SSH-Keygen/hero.webp'
+isPublished: true
+tags: ["git", "ssh", "github", "sécurité", "développement"]
+readingTime: "6 min"
+
 ---
+
+# 
+
+Tu veux pousser ton code sur GitHub sans avoir à retaper ton mot de passe à chaque fois ?  
+La solution : utiliser une clé SSH. C’est plus simple, plus rapide et surtout plus sécurisé.
+
+## Table des matières
+
+- [Pourquoi utiliser SSH ?](#pourquoi-utiliser-ssh)
+- [Prérequis et point d'attention](#prérequis-et-point-dattention)
+- [Générer une clé SSH](#générer-une-clé-ssh)
+- [Configurer la passphrase (optionnelle)](#configurer-la-passphrase-optionnelle)
+- [Ajouter la clé à l’agent SSH](#ajouter-la-clé-à-lagent-ssh)
+- [Ajouter la clé sur GitHub](#ajouter-la-clé-sur-github)
+- [Tester la connexion](#tester-la-connexion)
+- [Conclusion](#conclusion)
+- [🔍 À retenir](#-à-retenir)
+
+---
+
+## Pourquoi utiliser SSH ?
+
+SSH te permet d’accéder à GitHub sans identifiant ni mot de passe, via une paire de clés :
+- Une **clé privée** (gardée sur ton ordinateur)
+- Une **clé publique** (stockée sur GitHub)
+
+L’avantage : seule la clé publique peut être partagée, la clé privée reste à toi.  
+Aucune donnée sensible ne transite lors des connexions.
+
+---
+
+## Prérequis et point d'attention
+
+Je suis un utilisateur Mac. Assure-toi que tu as accès à un terminal.
+Et bien sur que quand tu vois "GastonDeSade" ou "gastondesade@proton.me", tu remplaces par ton propre nom d'utilisateur et email.
+
+Pour la suite, assure-toi que Git est installé sur ta machine.
+
+```bash
+git --version
+```
+
+Tu devrais voir la version de Git installée.
+```bash
+git version 2.50.1 (Apple Git-155)
+```
+
+Si ce n’est pas le cas, installe-le via [git-scm.com](https://git-scm.com/).
+
+Ouvre ensuite ton terminal et va dans un répertoire de travail.
+
+---
+## Définir ton email et nom d'utilisateur Git (si ce n'est pas déjà fait)
+
+Avant de commencer, vérifie les configurations Git locales (ton répertoire de travail) et globales (ton utilisateur sur la machine) :
+```bash
+git config --local -l
+git config --global -l
+```
+
+Si ce n'est pas déjà défini ou si tu veux les modifier, utilise les commandes suivantes en remplaçant par ton propre nom et email au niveau global :
+```bash
+git config user.name "GastonDeSade"
+git config user.email "gastondesade@proton.me"
+```
+
+---
+## Générer une clé SSH
+
+Commence par vérifier si tu as déjà des clés :
+
+```bash
+ls -la ~/.ssh/
+```
+
+S’il n’y en a pas de id_ed25519.pub par exemple, c'est bon.
+Tu peux générer une nouvelle paire de clés SSH :
+
+```bash
+ssh-keygen -t ed25519 -C "gastondesade@proton.me"
+```
+Quand il te demande où sauvegarder la clé, appuie juste sur Entrée pour accepter l’emplacement par défaut (`/Users/ton_utilisateur/.ssh/id_ed25519`).
+```bash
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/Users/joseph/.ssh/id_ed25519): 
+```
+
+---
+## Configurer la passphrase (optionnelle)
+
+Lors de la création, tu peux choisir une passphrase.
+Une passphrase est un mot de passe pour ta clé privée. 
+Tu devras la saisir chaque fois que tu utiliseras la clé, sauf si tu utilises un agent SSH (voir étape suivante).
+
+Sans passphrase : plus pratique, pas de saisie à chaque utilisation.
+Avec passphrase : plus sécurisé, demande une saisie à chaque action Git.
+
+```bash
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+```
+
+---
+## Ajouter la clé à l’agent SSH
+
+Démarre l’agent SSH :
+```bash
+eval "$(ssh-agent -s)"
+```
+
+Ajoute ta clé à l’agent :
+
+```bash
+ssh-add ~/.ssh/id_ed25519
+```
+Si tu as mis une passphrase, il te la demandera ici.
+
+---
+## Ajouter la clé sur GitHub
+
+Affiche ta clé publique :
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+```bash
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBX...
+```
+
+Puis :
+
+Copie le contenu affiché.
+
+Va sur [GitHub](https://github.com) et connecte-toi.
+
+Ouvre Settings → SSH and GPG keys.
+
+Clique sur New SSH key.
+
+Donne-lui un nom (ex. MacBook).
+
+Colle la clé publique.
+
+Clique sur Add SSH key.
+
+C'est fini.
+
+---
+
+## Tester la connexion
+
+Une fois la clé ajoutée, teste la connexion :
+
+```bash
+ssh -T git@github.com
+```
+
+Si tout est bon, GitHub te répondra :
+
+Hi GastonDeSade! You've successfully authenticated.
+
+---
+## Conclusion
+
+Tu es maintenant connecté à GitHub via SSH.
+Plus besoin d’entrer ton mot de passe à chaque push, et ton environnement est plus sécurisé.
+
+Si tu veux aller plus loin, regarde la documentation GitHub :
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+
+Enfin voici une commande pratique pour vérifier toutes tes configurations Git en une seule fois :
+
+```bash
+GIT_PAGER=cat bash -c 'printf "=== Locale ===\n"; git config --local -l 2>/dev/null || echo "Pas de config locale"; printf "\n=== Globale ===\n"; git config --global -l; printf "\n=== Système ===\n"; git config --system -l 2>/dev/null || echo "Pas de config système"'
+```
+
+Tu devrais voir quelque chose comme ça :
+
+```bash
+=== Locale ===
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+core.precomposeunicode=true
+user.name=GastonDeSade
+user.email=gastondesade@proton.me
+remote.origin.url=git@github.com:GastonDeSade/blog.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+branch.articles/astroblog.vscode-merge-base=origin/main
+
+=== Globale ===
+user.name=Gaston De Sade
+user.email=gastondesade@proton.me
+core.autocrlf=input
+
+=== Système ===
+Pas de config système
+```
+
+
+## ⁉️ Quizz
+Survolez le texte pour voir la réponse. (Ne fonctionne pas sur mobile)
+
+- <span class="hover-reveal" data-tooltip="Une clé SSH est une paire de clés cryptographiques utilisées pour authentifier une connexion SSH.">C'est quoi une clef SSH ?</span>
+- <span class="hover-reveal" data-tooltip="La clé publique est partagée avec le serveur (GitHub) pour l'authentification, tandis que la clé privée reste secrète sur ton ordinateur.">Quelle est la différence entre une clé publique et une clé privée ?</span>
+
+
