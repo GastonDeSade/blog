@@ -10,9 +10,9 @@ const isProd = process.env.NODE_ENV === 'production';
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href={isProd ? '/blog' : '/'}>Home</HeaderLink>
+			<HeaderLink href={isProd ? '/blog' : '/'}>Accueil</HeaderLink>
 			<HeaderLink href={isProd ? '/blog/blog' : '/blog'}>Blog</HeaderLink>
-			<HeaderLink href={isProd ? '/blog/about' : '/about'}>About</HeaderLink>
+			<HeaderLink href={isProd ? '/blog/about' : '/about'}>À propos</HeaderLink>
 		</div>
 		<div class="social-links">
 			<!-- 
