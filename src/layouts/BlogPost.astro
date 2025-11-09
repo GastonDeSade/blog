@@ -12,12 +12,8 @@ const { title, description, pubDate, updatedDate: rawUpdatedDate, heroImage } = 
 
 // Scope `updatedDate` to the whole page (frontmatter) so it can be used in the template
 // Make sure we compare date values, not object identity
-const datesEqual =
-	rawUpdatedDate &&
-	pubDate &&
-	new Date(pubDate).getTime() === new Date(rawUpdatedDate).getTime();
-
-const updatedDate = datesEqual ? null : rawUpdatedDate;
+const isUpdatedDateIsOlderThanPubDate = rawUpdatedDate && rawUpdatedDate.valueOf() > pubDate.valueOf();
+const updatedDate = isUpdatedDateIsOlderThanPubDate ? rawUpdatedDate : null;
 
 ---
 
