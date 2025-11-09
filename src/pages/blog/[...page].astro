@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
@@ -8,17 +9,28 @@ import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import type { CollectionEntry } from 'astro:content';
 
-const isProd = process.env.NODE_ENV === 'production';
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+	const isProd = process.env.NODE_ENV === 'production';
+	
+	let allPosts;
+	if(isProd) {
+		allPosts = (await getCollection('blog'))
+			.filter(post => post.data.isPublished && post.data.pubDate <= new Date())
+			.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	} else {
+		allPosts = (await getCollection('blog'))
+			.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	}
+	
+	return paginate(allPosts, { pageSize: 6 });
+};
 
-let posts;
-if(isProd) {
-    posts = (await getCollection('blog'))
-        .filter(post => post.data.isPublished && post.data.pubDate <= new Date())
-        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-} else {
-    posts = (await getCollection('blog'))
-        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-}
+type Props = {
+	page: Page<CollectionEntry<'blog'>>;
+};
+
+const { page } = Astro.props;
+const isProd = process.env.NODE_ENV === 'production';
 
 const isPostValid = (post: CollectionEntry<'blog'>) => {
 	return post.data.isPublished && post.data.pubDate <= new Date();
@@ -109,6 +121,37 @@ const isPostValid = (post: CollectionEntry<'blog'>) => {
 				border-radius: 12px;
 				padding: 10px;
 			}
+			/* Pagination styles */
+			.pagination {
+				display: flex;
+				justify-content: center;
+				gap: 1rem;
+				margin-top: 3rem;
+				align-items: center;
+			}
+			.pagination a,
+			.pagination span {
+				padding: 0.5rem 1rem;
+				border-radius: 6px;
+				text-decoration: none;
+				transition: 0.2s ease;
+			}
+			.pagination a {
+				background-color: rgb(var(--accent));
+				color: white;
+			}
+			.pagination a:hover {
+				background-color: rgb(var(--accent-dark));
+			}
+			.pagination a.disabled {
+				background-color: rgb(var(--gray-light));
+				color: rgb(var(--gray));
+				pointer-events: none;
+			}
+			.pagination .current-page {
+				color: rgb(var(--black));
+				font-weight: bold;
+			}
 		</style>
 	</head>
 	<body>
@@ -117,7 +160,7 @@ const isPostValid = (post: CollectionEntry<'blog'>) => {
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
+						page.data.map((post) => (
 							<li>
 								<a href={isProd ? `/blog/blog/${post.id}/` : `/blog/${post.id}/`}
 								   class={!isProd ? (isPostValid(post) ? 'post-valid' : 'post-invalid') : ''}>
@@ -134,6 +177,25 @@ const isPostValid = (post: CollectionEntry<'blog'>) => {
 					}
 				</ul>
 			</section>
+			
+			{/* Pagination controls */}
+			<nav class="pagination">
+				{page.url.prev ? (
+					<a href={page.url.prev}>← Précédent</a>
+				) : (
+					<a class="disabled">← Précédent</a>
+				)}
+				
+				<span class="current-page">
+					Page {page.currentPage} sur {page.lastPage}
+				</span>
+				
+				{page.url.next ? (
+					<a href={page.url.next}>Suivant →</a>
+				) : (
+					<a class="disabled">Suivant →</a>
+				)}
+			</nav>
 		</main>
 		<Footer />
 	</body>
