@@ -27,6 +27,8 @@
 	--tooltip-text: #ffffff;
 	/* Back-compat variable used in components */
 	--text-color: var(--color-text);
+	/* UI separators */
+	--header-sep: rgba(0, 0, 0, 0.08); /* subtle hairline in light */
 }
 
 body {
@@ -72,6 +74,7 @@ html[data-theme="dark"] {
 	--table-cell-bg: #1a1f29;
 	--tooltip-bg: rgba(255, 255, 255, 0.95);
 	--tooltip-text: #1a1a1a;
+	--header-sep: rgba(255, 255, 255, 0.08); /* subtle hairline in dark */
 }
 main {
 	width: 720px;
