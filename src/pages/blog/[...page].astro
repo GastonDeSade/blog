@@ -32,8 +32,11 @@ type Props = {
 const { page } = Astro.props;
 const isProd = process.env.NODE_ENV === 'production';
 
-const isPostValid = (post: CollectionEntry<'blog'>) => {
-	return post.data.isPublished && post.data.pubDate <= new Date();
+const postStatus = (post: CollectionEntry<'blog'>) => {
+	return {
+		status: post.data.isPublished && post.data.pubDate.valueOf() < Date.now() ? 'Publié' : 
+		(post.data.isPublished && post.data.pubDate.valueOf() > Date.now() ? 'À venir' : 'Brouillon')
+	};
 };
 
 ---
@@ -111,12 +114,17 @@ const isPostValid = (post: CollectionEntry<'blog'>) => {
 				}
 			}
 			/* Ajoutez ces styles */
-			.post-valid {
+			.post-published {
 				border: 2px solid green;
 				border-radius: 12px;
 				padding: 10px;
 			}
-			.post-invalid {
+			.post-upcoming {
+				border: 2px solid orange;
+				border-radius: 12px;
+				padding: 10px;
+			}
+			.post-draft {
 				border: 2px solid red;
 				border-radius: 12px;
 				padding: 10px;
@@ -163,7 +171,7 @@ const isPostValid = (post: CollectionEntry<'blog'>) => {
 						page.data.map((post) => (
 							<li>
 								<a href={isProd ? `/blog/blog/${post.id}/` : `/blog/${post.id}/`}
-								   class={!isProd ? (isPostValid(post) ? 'post-valid' : 'post-invalid') : ''}>
+								   class={!isProd ? (postStatus(post).status === 'Publié' ? 'post-published' : (postStatus(post).status === 'À venir' ? 'post-upcoming' : 'post-draft')) : ''}>
 									{post.data.heroImage && (
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}
