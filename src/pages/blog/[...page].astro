@@ -22,7 +22,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 			.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 	}
 	
-	return paginate(allPosts, { pageSize: 6 });
+	return paginate(allPosts, { pageSize: 10 });
 };
 
 type Props = {
