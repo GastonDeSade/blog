@@ -14,6 +14,7 @@ Features:
 - ✅ Sitemap support
 - ✅ RSS Feed support
 - ✅ Markdown & MDX support
+- ✅ GitHub Issues-based comments (using Utterances)
 
 ## 🚀 Project Structure
 
@@ -56,6 +57,34 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## 💬 Comments System
+
+This blog uses [Utterances](https://utteranc.es/) to enable comments on blog posts. Utterances uses GitHub Issues as a backend, which means:
+
+- Readers need a GitHub account to comment
+- Comments are stored as GitHub Issues in this repository
+- GitHub's authentication and moderation tools are used
+- No database or server-side code required
+
+### Setup
+
+The comments are already configured in `src/components/Comments.astro` and integrated into blog posts via `src/layouts/BlogPost.astro`.
+
+To enable comments on your blog:
+
+1. Install the [Utterances app](https://github.com/apps/utterances) on your GitHub repository
+2. The app needs permission to create issues
+3. Comments will automatically appear at the bottom of each blog post
+
+### Configuration
+
+You can customize the Comments component by modifying the props in `src/layouts/BlogPost.astro`:
+
+- `repo`: Your GitHub repository (format: `username/repo`)
+- `issueTerm`: How to map blog posts to issues (`pathname`, `url`, `title`, or `og:title`)
+- `theme`: Visual theme (`github-light`, `github-dark`, `preferred-color-scheme`, etc.)
+- `label`: Optional label to add to created issues
 
 ## Credit
 
