@@ -9,7 +9,7 @@ import Comments from '../components/Comments.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate: rawUpdatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate: rawUpdatedDate, heroImage, readingTime, tags } = Astro.props;
 
 // Scope `updatedDate` to the whole page (frontmatter) so it can be used in the template
 // Make sure we compare date values, not object identity
@@ -184,6 +184,21 @@ const updatedDate = isUpdatedDateIsOlderThanPubDate ? rawUpdatedDate : null;
 							)}
 						</div>
 						<h1>{title}</h1>
+						<p>Temps de lecture : <i>{readingTime}</i></p>
+						{tags && (
+							<p>
+								Tags :{' '}
+								{tags.map((tag, index) => (
+									
+									<i>
+										<span key={tag}>
+											{tag}
+											{index < tags.length - 1 ? ', ' : ''}
+										</span>
+									</i>
+								))}
+							</p>
+						)}
 						<hr />
 					</div>
 					<slot />
