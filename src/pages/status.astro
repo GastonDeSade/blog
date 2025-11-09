@@ -32,9 +32,10 @@ let posts = (await getCollection('blog'))
                 <tr>
                     <th>Image</th>
                     <th>Titre</th>
-                    <th>Date de publication</th>
                     <th>Statut</th>
-                    <th>Lien</th>
+                    <th>Date de création</th>
+                    <th>Date de publication</th>
+                    <th>Date de mise à jour</th>
                 </tr>
 					{
 						posts.map((post) => (
@@ -48,24 +49,29 @@ let posts = (await getCollection('blog'))
                                 </td>
 								<td>
 									<a href={isProd ? `/blog/blog/${post.id}/` : `/blog/${post.id}/`}>
-										<h4 class="title">{post.data.title}</h4>
+										<p class="title">{post.data.title}</p>
 									</a>
-								</td>
-								<td>
-									<p class="date">
-										<FormattedDateArray date={post.data.pubDate} />
-									</p>
 								</td>
 								<td>
 									<p class="status">
                                         {post.data.isPublished && post.data.pubDate.valueOf() < Date.now() ? 'Publié' : 
                                         (post.data.isPublished && post.data.pubDate.valueOf() > Date.now() ? 'À venir' : 'Brouillon')}</p>
 								</td>
-								<td>
-									<a href={isProd ? `/blog/blog/${post.id}/` : `/blog/${post.id}/`}>
-										{isProd ? `/blog/blog/${post.id}/` : `/blog/${post.id}/`}
-									</a>
+                                <td>
+									<p class="date">
+										<FormattedDateArray date={post.data.startDate} />
+									</p>
 								</td>
+                                <td>
+                                    <p class="date">
+                                        <FormattedDateArray date={post.data.pubDate} />
+                                    </p>
+                                </td>
+                                <td>
+                                    <p class="date">
+                                        <FormattedDateArray date={post.data.updatedDate} />
+                                    </p>
+                                </td>
 							</tr>
 						))
 					}
