@@ -33,6 +33,7 @@ let posts = (await getCollection('blog'))
                 <tr>
                     <th>Image</th>
                     <th>Titre</th>
+					<th>Description</th>
                     <th>Date de publication</th>
                 </tr>
 					{
@@ -50,20 +51,10 @@ let posts = (await getCollection('blog'))
 										<p class="title">{post.data.title}</p>
 									</a>
 								</td>
-
-                                <td>
-									<p class="date">
-										<FormattedDateArray date={post.data.startDate} />
-									</p>
-								</td>
+								<td><p>{post.data.description}</p></td>
                                 <td>
                                     <p class="date">
                                         <FormattedDateArray date={post.data.pubDate} />
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="date">
-                                        <FormattedDateArray date={post.data.updatedDate} />
                                     </p>
                                 </td>
 							</tr>
