@@ -1,0 +1,58 @@
+---
+// Comments component using Utterances (GitHub Issues as backend)
+// Documentation: https://utteranc.es/
+interface Props {
+	repo: string;
+	issueTerm?: 'pathname' | 'url' | 'title' | 'og:title';
+	label?: string;
+	theme?: 'github-light' | 'github-dark' | 'preferred-color-scheme' | 'github-dark-orange' | 'icy-dark' | 'dark-blue' | 'photon-dark' | 'boxy-light' | 'gruvbox-dark';
+}
+
+const {
+	repo,
+	issueTerm = 'pathname',
+	label = '',
+	theme = 'github-light'
+} = Astro.props;
+---
+
+<div class="comments-section">
+	<h2>Commentaires</h2>
+	<div class="utterances-container">
+		<script
+			src="https://utteranc.es/client.js"
+			repo={repo}
+			issue-term={issueTerm}
+			label={label}
+			theme={theme}
+			crossorigin="anonymous"
+			async
+		></script>
+	</div>
+</div>
+
+<style>
+	.comments-section {
+		width: 720px;
+		max-width: calc(100% - 2em);
+		margin: 2rem auto;
+		padding: 2rem 1em;
+		border-top: 2px solid rgba(var(--gray-light), 0.3);
+	}
+
+	.comments-section h2 {
+		margin-bottom: 1.5rem;
+		color: rgb(var(--gray-dark));
+		font-size: 1.75rem;
+		text-align: center;
+	}
+
+	.utterances-container {
+		margin: 0 auto;
+	}
+
+	/* Ensure proper spacing for the utterances widget */
+	.utterances {
+		max-width: 100%;
+	}
+</style>
