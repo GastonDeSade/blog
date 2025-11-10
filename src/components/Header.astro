@@ -8,7 +8,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2><a href={isProd ? '/blog' : '/'}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
 			<HeaderLink href={isProd ? '/blog' : '/'}>Accueil</HeaderLink>
 			<HeaderLink href={isProd ? '/blog/blog' : '/blog'}>Blog</HeaderLink>
