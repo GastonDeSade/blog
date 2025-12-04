@@ -3,3 +3,4 @@
 
 export const SITE_TITLE = 'Gaston De Sade';
 export const SITE_DESCRIPTION = 'Learn & build in public';
+export const isProd = import.meta.env.MODE === 'production';

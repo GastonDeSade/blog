@@ -3,12 +3,13 @@ title: "Créer un blog moderne avec Astro"
 description: "Découvre comment lancer ton propre blog en moins de 10 minutes avec Astro, le framework statique ultra rapide."
 startDate: "2025-11-07"
 pubDate: "2025-11-23"
-updatedDate: "2025-11-08"
+updatedDate: "2025-12-04"
 heroImage: "../../assets/articles/astro-blog/hero.webp"
 isPublished: true
 readingTime: "7 min"
 tags: ["astro", "blog", "static site", "javascript", "markdown", "frontend"]
 ---
+import { isProd } from '../../consts';
 
 Astro est un framework moderne pour générer des sites statiques ultra performants. 
 
@@ -108,17 +109,17 @@ Pour la personnalisation, elle est infini comme c'est du code:
     <li>Tu peux utiliser des plugins comme Starlight Blog ou i18n.</li>
 </ul>
 
-Ce n'est pas le sujet de cet article, mais n'hésite pas à consulter mon article sur les libs que j'utilise: [astro-tools](/blog/astro-tools/) et la [documentation officielle d'Astro](https://docs.astro.build) pour plus de détails.
+Ce n'est pas le sujet de cet article, mais n'hésite pas à consulter mon article sur les libs que j'utilise: <a href={isProd ? '/blog/blog/astro-tools/' : '/blog/astro-tools/'}>astro-tools</a> et la [documentation officielle d'Astro](https://docs.astro.build) pour plus de détails.
 
 ![Architecture d'un site Astro](../../assets/articles/astro-blog/architecture.webp)
 
 ## Conclusion
 
 Pour aller plus loin, tu peux vouloir le mettre en production avec un CI/CD via GitHub Actions.
-J'ai écrit un article complet à ce sujet: [Astro & GitHub Actions : CI/CD simplifié](/blog/astro-cicd-github/).
+J'ai écrit un article complet à ce sujet : <a href={isProd ? '/blog/blog/astro-cicd-github/' : '/blog/astro-cicd-github/'}>Astro & GitHub Actions — CI/CD simplifié</a>.
 
 Sinon voici encore quelques ressources utiles pour continuer ton aventure avec Astro :
 
 Documentation Astro officielle : [https://docs.astro.build](https://docs.astro.build)
 
-Deploiement avec GitHub Pages : [Astro + GitHub Pages](https://docs.astro.build/en/guides/deploy/github-pages/)
+Deploiement avec GitHub Pages : [Astro + GitHub Pages](https://docs.astro.build/en/guides/deploy/github/)
