@@ -13,7 +13,6 @@ const isProd = process.env.NODE_ENV === 'production';
 			<HeaderLink href={isProd ? '/blog' : '/'}>Accueil</HeaderLink>
 			<HeaderLink href={isProd ? '/blog/blog' : '/blog'}>Blog</HeaderLink>
 			{!isProd && <HeaderLink href='/status'>Statut</HeaderLink>}
-			<HeaderLink href={isProd ? '/blog/coming-soon' : '/coming-soon'}>À venir</HeaderLink>
 		</div>
 		<div class="social-links">
 			<!-- 
