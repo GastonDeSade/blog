@@ -24,15 +24,15 @@ const themeScriptPath = `${import.meta.env.BASE_URL}scripts/theme.js`;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
+<!-- Script pour éviter le flash de contenu non stylisé (FOUC) - DOIT être avant le CSP -->
+<script src={themeScriptPath} is:inline></script>
+
 <!-- Security Headers via Meta Tags -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://giscus.app; style-src 'self' 'unsafe-inline'; img-src 'self' https://avatars.githubusercontent.com https://github.githubassets.com; font-src 'self'; connect-src 'self' https://giscus.app; frame-src https://giscus.app; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" />
 <meta http-equiv="X-Content-Type-Options" content="nosniff" />
 <meta http-equiv="X-Frame-Options" content="DENY" />
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
 <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
-
-<!-- Script pour éviter le flash de contenu non stylisé (FOUC) -->
-<script src={themeScriptPath} is:inline></script>
 
 <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.ico`} />
 <link rel="sitemap" href={`${import.meta.env.BASE_URL}/sitemap-index.xml`} />
